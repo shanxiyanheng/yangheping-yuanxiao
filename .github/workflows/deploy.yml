@@ -1,18 +1,22 @@
 name: Deploy to GitHub Pages
 
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
+
 concurrency:
   group: pages
   cancel-in-progress: true
+
 
 jobs:
   deploy:
@@ -25,7 +29,11 @@ jobs:
       - name: Flatten site files
         run: |
           mkdir -p site
-          cp -r yangheping-yuanxiao/yangheping-yuanxiao/* site/
+          cp -r yangheping-yuanxiao/* site/
+          if [ -d site/yangheping-yuanxiao ]; then
+            cp site/yangheping-yuanxiao/* site/
+            rm -rf site/yangheping-yuanxiao
+          fi
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -33,3 +41,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
